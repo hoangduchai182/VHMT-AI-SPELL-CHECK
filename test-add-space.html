@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        text1 = `
+		<span style="font-family:'Times New Roman';font-size:22pt;color:#000000;mso-style-textfill-fill-color:#000000">Cơ quan Cảnh sát điều</span>
+		<span style="font-family:'Times New Roman';font-size:22pt;color:#000000;mso-style-textfill-fill-color:#000000"><span style="background-color: yellow">u</span></span>
+		<span style="font-family:'Times New Roman';font-size:22pt;color:#000000;mso-style-textfill-fill-color:#000000">trả</span>
+        <span style="font-family:'Times New Roman';font-size:22pt;color:#000000;mso-style-textfill-fill-color:#000000">tố tụng hình sự</span>
+        `
+
+        function addSpaceToSpanContent(html) {
+            // Tạo một div tạm thời để chứa HTML
+            const div = document.createElement('div');
+            div.innerHTML = html.trim();
+
+            // Lấy tất cả các thẻ span trong div tạm thời
+            const spans = div.querySelectorAll('span');
+
+            // Thêm dấu cách vào cuối nội dung của mỗi thẻ span
+            spans.forEach(span => {
+                span.innerHTML = span.innerHTML + ' ';
+            });
+
+            // Trả lại HTML đã được chỉnh sửa
+            return div.innerHTML;
+        }
+
+        // Sử dụng hàm để thêm dấu cách
+        const updatedText1 = addSpaceToSpanContent(text1);
+
+        // Hiển thị kết quả
+        console.log(updatedText1);
+    </script>
+</body>
+</html>

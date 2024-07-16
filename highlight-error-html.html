@@ -1,0 +1,130 @@
+<!--
+ (c) Copyright Ascensio System SIA 2020
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>AI-HTML</title>
+	<script type="text/javascript" src="https://onlyoffice.github.io/sdkjs-plugins/v1/plugins.js"></script>
+	<script type="text/javascript" src="https://onlyoffice.github.io/sdkjs-plugins/v1/plugins-ui.js"></script>
+	<link rel="stylesheet" href="https://onlyoffice.github.io/sdkjs-plugins/v1/plugins.css">
+
+	<script src="vendor/prettier/standalone@2.3.2.js"></script>
+	<script src="vendor/prettier/parser-html@2.3.2.js"></script>
+
+	<link rel="stylesheet" href="vendor/codemirror/codemirror.css">
+	<link rel="stylesheet" href="vendor/codemirror/bespin.css">
+
+	<script src="vendor/codemirror/codemirror.js"></script>
+	<script src="vendor/codemirror/xml.js"></script>
+
+	<link rel="stylesheet" href="resources/css/plugin_style_2.css">
+
+	<script src="scripts/highlight-error-html.js"></script>
+	<style>
+		#all{
+			overflow: auto;
+			height: 100vh;
+		}
+		#textarea, #result, #textarea-html, #result-html{
+			border: 1px solid #000;
+			border-radius: 5px;
+			font-size: 12px;
+			overflow: auto;
+			word-wrap: break-word;
+		}
+		#textarea, #result {
+			padding: 10px;
+			height: 100px;
+		}
+		#textarea-html, #result-html{
+			padding: 0;
+			height: 120px;
+		}
+	</style>
+</head>
+<body>
+	<div id="all" style="padding: 0 5px;">
+		<div>
+			<div class="flex flex-column mb-1">
+				<label for="">Lựa chọn phương phức</label>
+				<select name="" id="choice">
+					<option value="SUA_LOI">Sửa lỗi chính tả</option>
+					<option value="NGU_PHAP">Sửa lỗi ngữ pháp</option>
+				</select>
+			</div>
+			<div class="flex flex-column mb-1">
+				<label for="">Lựa chọn ngôn ngữ</label>
+				<select name="" id="">
+					<option value="vi">Tiếng việt</option>
+				</select>
+			</div>
+			<div class="flex flex-column mb-1">
+				<label for="">Phân vùng đoạn văn</label>
+				<select name="" id="select-text">
+					<option value="DOAN_VAN">Đoạn văn đã chọn</option>
+					<!-- <option value="TOAN_BO">Toàn bộ</option> -->
+				</select>
+			</div>
+		
+			<div class="flex flex-column mb-1" id="enter_container">
+				<label for="">Nội dung đã chọn</label>
+				<div class="flex justify-center">
+					<div id="tab-text" class="tab active">Text</div>
+					<div id="tab-html" class="tab">Html</div>
+				</div>
+				<div id="textarea" class="tab-content active" contenteditable="true" style="border-color: black; background-color:#fff; color: black;"></div>
+				<div id="textarea-html" class="tab-content" contenteditable="true"></div>
+			</div>
+		
+			<div class="flex justify-around mb-1">
+				<button id="clear">Xóa</button>
+				<button id="check-gpt">Kiểm tra lỗi</button>
+			</div>
+		
+			<div class="line mb-1"></div>
+		
+			<div class="flex flex-column mb-1">
+				<label for=""><b>Kết quả</b></label>
+				<div class="flex justify-center">
+					<div id="tab-res-text" class="tab-res active">Text</div>
+					<div id="tab-res-html" class="tab-res">Html</div>
+				</div>
+				<div id="result" class="tab-res-content active" contenteditable="true" style="border-color: black; background-color:#fff; color: black;"></div>
+				<div id="result-html" class="tab-res-content" contenteditable="true"></div>
+			</div>
+		
+			<div class="flex flex-between mb-1">
+				<button id="btn_paste_end">Chèn vào cuối</button>
+				<button id="btn_paste">Chèn vào văn bản</button>
+			</div>
+		
+			<div id="processing-message" style="display: none; position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: rgb(0, 0, 0, 0.9); padding: 10px; border-radius: 5px; z-index: 9999; text-align: center;">
+				<div style="position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 24px; font-weight: bold;font-family: 'Times New Roman', Times, serif;">
+					Xin chờ trong giây lát <span id="dots"></span>
+				</div>
+				<div id="count-percent" style="position: absolute; top: 50%; left: 43%; transform: translate(-50%, -50%); color: #fff; font-size: 16px; font-weight: bold;font-family: 'Times New Roman', Times, serif;">0%</div>
+				<div id="count-part" style="position: absolute; top: 50%; left: 57%; transform: translate(-50%, -50%); color: #fff; font-size: 16px; font-weight: bold;font-family: 'Times New Roman', Times, serif;">1 / 10</div>
+			</div>
+			<div id="warning-message" style="display: none; position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: rgb(0, 0, 0, 0.9); padding: 10px; border-radius: 5px; z-index: 9999; text-align: center;">
+				<div style="position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 24px; font-weight: bold;font-family: 'Times New Roman', Times, serif;">
+					Chưa có dữ liệu ! Hoặc dữ liệu đã bị xóa khi bạn ấn vào nút "Xóa"
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

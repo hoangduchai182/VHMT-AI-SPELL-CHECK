@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>AI-Editor</title>
+	<script type="text/javascript" src="https://onlyoffice.github.io/sdkjs-plugins/v1/plugins.js"></script>
+	<script type="text/javascript" src="https://onlyoffice.github.io/sdkjs-plugins/v1/plugins-ui.js"></script>
+	<link rel="stylesheet" href="https://onlyoffice.github.io/sdkjs-plugins/v1/plugins.css">
+
+	<script src="https://cdn.jsdelivr.net/npm/diff@5.0.0/dist/diff.min.js"></script>
+
+	<link rel="stylesheet" href="resources/css/plugin_style_2.css">
+
+	<script src="scripts/highlight-error-text.js"></script>
+	<style>
+		#textarea, #result{
+			border: 1px solid #000;
+			border-radius: 5px 5px 5px 5px;
+			font-size: 12px;
+			overflow: auto;
+			word-wrap: break-word;
+			border-color: black; 
+			background-color:#fff; 
+			color: black;
+		}
+		#textarea, #result{
+			padding: 10px;
+			height: 100px;
+		}
+	</style>
+</head>
+<body>
+	<div id="all" style="padding: 0 5px;">
+		<div>
+			<div class="flex flex-column mb-1" id="enter_container">
+				<label for="">Nội dung đã chọn</label>
+				<div class="flex justify-center">
+					<div id="tab-old" class="tab active">Đoạn văn gốc</div>
+					<div id="tab-new" class="tab">Sửa toàn bộ</div>
+				</div>
+				<div id="textarea" class="tab-content active" contenteditable="true"></div>
+				<div id="result" class="tab-content" contenteditable="true"></div>
+			</div>
+		
+			<div class="flex justify-around mb-1">
+				<button id="clear">Xóa</button>
+				<button id="check-gpt">Kiểm tra lỗi</button>
+			</div>
+		
+			<div class="line mb-1"></div>
+		
+			<div id="error_list" class="flex flex-column scroll-55vh mb-1" style="display: none;">
+				<div>
+					<label for=""><b>Danh sách lỗi</b></label>
+					<div id="result-part" class="mb-1"></div>
+				</div>
+				<div class="flex flex-between mb-1">
+					<!-- <button id="btn_paste_end">Chèn vào cuối</button> -->
+					<button id="btn_paste">Chèn vào văn bản</button>
+				</div>
+			</div>
+		</div>
+		<div id="processing-message" style="display: none; position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: rgb(0, 0, 0, 0.9); padding: 10px; border-radius: 5px; z-index: 9999; text-align: center;">
+			<div style="position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 24px; font-weight: bold;font-family: 'Times New Roman', Times, serif;">
+				Xin chờ trong giây lát <span id="dots"></span>
+			</div>
+			<div id="count-percent" style="position: absolute; top: 50%; left: 43%; transform: translate(-50%, -50%); color: #fff; font-size: 16px; font-weight: bold;font-family: 'Times New Roman', Times, serif;">0%</div>
+			<div id="count-part" style="position: absolute; top: 50%; left: 57%; transform: translate(-50%, -50%); color: #fff; font-size: 16px; font-weight: bold;font-family: 'Times New Roman', Times, serif;">1 / 10</div>
+		</div>
+		<div id="warning-message" style="display: none; position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: rgb(0, 0, 0, 0.9); padding: 10px; border-radius: 5px; z-index: 9999; text-align: center;">
+			<div style="position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 24px; font-weight: bold;font-family: 'Times New Roman', Times, serif;">
+				Chưa có dữ liệu ! Hoặc dữ liệu đã bị xóa khi bạn ấn vào nút "Xóa"
+			</div>
+		</div>
+	</div>
+</body>
+</html>
