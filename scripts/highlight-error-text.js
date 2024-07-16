@@ -299,10 +299,8 @@ let savedDismiss = [];
     };
 
     async function requestAPI(content) {
-        const API_key = '';
-        const url = 'https://api.openai.com/v1/chat/completions';
         const headers = {
-            'Authorization': `Bearer ${API_key}`,
+            'Authorization': `Bearer ${sk-proj-K6NPeCxlIP7UmiNUPZCpT3BlbkFJ71dhOcDVXR8MaKfA5qLm}`,
             'Content-Type': 'application/json'
         };
         
@@ -324,7 +322,8 @@ let savedDismiss = [];
                 { role: "user", content: content }
             ],
         };
-    
+
+        const url = 'https://api.openai.com/v1/chat/completions';
         try {
             const response = await fetch(url, {
                 method: 'POST',
